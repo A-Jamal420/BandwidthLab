@@ -71,6 +71,28 @@ Triad:     13600.2    0.169000    0.167000  0.171000
 - **Best Rate MB/s** — bandwidth computed from the fastest (min-time) iteration.
 - **Avg/Min/Max time** — timing in seconds across the non-cold-start iterations.
 
+## Benchmark results
+
+![Triad bandwidth vs. thread count](docs/benchmark-results.png)
+
+Tested thread counts 1–32, each point from
+`./build/main <threads> 100000000 10`. Bandwidth grows nearly linearly with
+thread count until it saturates at the physical core count, topping out at
+**~104.5 GB/s with 16 threads**. Beyond that, throughput plateaus and gets
+noisier rather than improving.
+
+Measured on:
+
+| Component | Spec |
+|-----------|------|
+| CPU       | Intel Xeon Platinum 8573C, 1 socket, 8 cores / 16 threads (SMT2) |
+| Memory    | 62 GiB RAM |
+| OS        | Ubuntu 24.04.4 LTS, kernel 6.17.0-1018-azure |
+
+This is an Azure-hosted VM, so results can include scheduling noise from the
+hypervisor — expect some run-to-run variance, especially at higher thread
+counts.
+
 ## License
 
 MIT License — see [LICENSE](LICENSE) for details.
