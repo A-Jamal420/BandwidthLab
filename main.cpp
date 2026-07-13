@@ -46,51 +46,55 @@ int main(int argc, char** argv) {
     int chunk = ArraySize / THREADS, scalar = 3;
 
     for (int i = 0; i < LOOP; i++) {
-
+        std::vector<std::thread> pool;
+        pool.reserve(THREADS);
+        for (int t = 0; t < THREADS; t++) {
+            int start = t * chunk;
+            int end = (t == THREADS - 1) ? ArraySize : start + chunk;
+            pool.push_back(std::thread(copy, start, end, a, c)); // (Jimmy) to reserve the memory for the threads, and to avoid reallocation of the vector 14/7/2026 12:10 AM 
+        }
         times[0][i] = mysecond();
         {
-            std::vector<std::thread> pool;
-            for (int t = 0; t < THREADS; t++) {
-                int start = t * chunk;
-                int end = (t == THREADS - 1) ? ArraySize : start + chunk;
-                pool.push_back(std::thread(copy, start, end, a, c));
-            }
-            for (auto &th : pool) th.join(); // time issue ???????? i have no idea
+            for (auto &th : pool) th.join(); // time issue ???????? i have no idea 
         }
         times[0][i] = mysecond() - times[0][i];
 
+        std::vector<std::thread> pool;
+        pool.reserve(THREADS);
+        for (int t = 0; t < THREADS; t++) {
+            int start = t * chunk;
+            int end = (t == THREADS - 1) ? ArraySize : start + chunk;
+            pool.push_back(std::thread(scale, start, end, b, c, scalar));
+        }
         times[1][i] = mysecond();
         {
-            std::vector<std::thread> pool;
-            for (int t = 0; t < THREADS; t++) {
-                int start = t * chunk;
-                int end = (t == THREADS - 1) ? ArraySize : start + chunk;
-                pool.push_back(std::thread(scale, start, end, b, c, scalar));
-            }
             for (auto &th : pool) th.join();
         }
         times[1][i] = mysecond() - times[1][i];
 
+        std::vector<std::thread> pool;
+        pool.reserve(THREADS);  
+        for (int t = 0; t < THREADS; t++) {
+            int start = t * chunk;
+            int end = (t == THREADS - 1) ? ArraySize : start + chunk;
+            pool.push_back(std::thread(add, start, end, a, b, c));
+        }
         times[2][i] = mysecond();
         {
-            std::vector<std::thread> pool;
-            for (int t = 0; t < THREADS; t++) {
-                int start = t * chunk;
-                int end = (t == THREADS - 1) ? ArraySize : start + chunk;
-                pool.push_back(std::thread(add, start, end, a, b, c));
-            }
             for (auto &th : pool) th.join(); 
         }
         times[2][i] = mysecond() - times[2][i];
 
+        std::vector<std::thread> pool;
+        pool.reserve(THREADS);
+        for (int t = 0; t < THREADS; t++) {
+            int start = t * chunk;
+            int end = (t == THREADS - 1) ? ArraySize : start + chunk;
+            pool.push_back(std::thread(triad, start, end, a, b, c, scalar));
+        }
         times[3][i] = mysecond();
         {
-            std::vector<std::thread> pool;
-            for (int t = 0; t < THREADS; t++) {
-                int start = t * chunk;
-                int end = (t == THREADS - 1) ? ArraySize : start + chunk;
-                pool.push_back(std::thread(triad, start, end, a, b, c, scalar));
-            }
+            
             for (auto &th : pool) th.join();
         }
         times[3][i] = mysecond() - times[3][i];
