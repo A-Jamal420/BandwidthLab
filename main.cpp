@@ -59,8 +59,7 @@ int main(int argc, char** argv) {
         }
         times[0][i] = mysecond() - times[0][i];
 
-        std::vector<std::thread> pool;
-        pool.reserve(THREADS);
+        pool.clear();
         for (int t = 0; t < THREADS; t++) {
             int start = t * chunk;
             int end = (t == THREADS - 1) ? ArraySize : start + chunk;
@@ -72,8 +71,7 @@ int main(int argc, char** argv) {
         }
         times[1][i] = mysecond() - times[1][i];
 
-        std::vector<std::thread> pool;
-        pool.reserve(THREADS);  
+        pool.clear();
         for (int t = 0; t < THREADS; t++) {
             int start = t * chunk;
             int end = (t == THREADS - 1) ? ArraySize : start + chunk;
@@ -85,7 +83,7 @@ int main(int argc, char** argv) {
         }
         times[2][i] = mysecond() - times[2][i];
 
-        std::vector<std::thread> pool;
+        pool.clear();
         pool.reserve(THREADS);
         for (int t = 0; t < THREADS; t++) {
             int start = t * chunk;
