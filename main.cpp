@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
         }
         times[0][i] = mysecond();
         {
-            for (auto &th : pool) th.join(); // time issue ???????? i have no idea 
+            for (auto &th : pool) th.join(); // time issue ???????? i have no idea 7/7/2026
         }
         times[0][i] = mysecond() - times[0][i];
 
@@ -92,7 +92,6 @@ int main(int argc, char** argv) {
         }
         times[3][i] = mysecond();
         {
-            
             for (auto &th : pool) th.join();
         }
         times[3][i] = mysecond() - times[3][i];
